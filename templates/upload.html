@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repeater List Creator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .card {
+            margin-top: 20px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function addFileInputs() {
+            const files = document.getElementById('files').files;
+            const fileInputsDiv = document.getElementById('fileInputs');
+            fileInputsDiv.innerHTML = '';
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h5 class="mb-0">File: ${file.name}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="group_no_${i}" class="form-label">Group Number:</label>
+                            <input type="text" class="form-control" id="group_no_${i}" name="group_no_${i}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="group_name_${i}" class="form-label">Group Name:</label>
+                            <input type="text" class="form-control" id="group_name_${i}" name="group_name_${i}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="utc_offset_${i}" class="form-label">UTC Offset:</label>
+                            <select class="form-select" id="utc_offset_${i}" name="utc_offset_${i}" required>
+                                <option value="-12:00">-12:00</option>
+                                <option value="-11:00">-11:00</option>
+                                <option value="-10:00">-10:00</option>
+                                <option value="-09:30">-09:30</option>
+                                <option value="-09:00">-09:00</option>
+                                <option value="-08:00">-08:00</option>
+                                <option value="-07:00">-07:00</option>
+                                <option value="-06:00">-06:00</option>
+                                <option value="-05:00">-05:00</option>
+                                <option value="-04:00">-04:00</option>
+                                <option value="-03:30">-03:30</option>
+                                <option value="-03:00">-03:00</option>
+                                <option value="-02:00">-02:00</option>
+                                <option value="-01:00">-01:00</option>
+                                <option value="+00:00">+00:00</option>
+                                <option value="+01:00">+01:00</option>
+                                <option value="+02:00">+02:00</option>
+                                <option value="+03:00">+03:00</option>
+                                <option value="+03:30">+03:30</option>
+                                <option value="+04:00">+04:00</option>
+                                <option value="+04:30">+04:30</option>
+                                <option value="+05:00">+05:00</option>
+                                <option value="+05:30">+05:30</option>
+                                <option value="+05:45">+05:45</option>
+                                <option value="+06:00">+06:00</option>
+                                <option value="+06:30">+06:30</option>
+                                <option value="+07:00">+07:00</option>
+                                <option value="+08:00">+08:00</option>
+                                <option value="+08:45">+08:45</option>
+                                <option value="+09:00">+09:00</option>
+                                <option value="+09:30">+09:30</option>
+                                <option value="+10:00">+10:00</option>
+                                <option value="+10:30">+10:30</option>
+                                <option value="+11:00">+11:00</option>
+                                <option value="+12:00">+12:00</option>
+                                <option value="+12:45">+12:45</option>
+                                <option value="+13:00">+13:00</option>
+                                <option value="+14:00">+14:00</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name_choice_${i}" class="form-label">Name Column Choice:</label>
+                            <select class="form-select" id="name_choice_${i}" name="name_choice_${i}" required>
+                                <option value="Location">Location</option>
+                                <option value="Output Freq">Output Freq</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="position_choice_${i}" class="form-label">Position:</label>
+                            <select class="form-select" id="position_choice_${i}" name="position_choice_${i}" required>
+                                <option value="Exact">Exact</option>
+                                <option value="Approximate">Approximate</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+                fileInputsDiv.appendChild(card);
+            }
+        }
+
+        function toggleHotspotEntry() {
+            const hotspotEntryDiv = document.getElementById('hotspotEntry');
+            const addHotspotCheckbox = document.getElementById('addHotspot');
+            hotspotEntryDiv.style.display = addHotspotCheckbox.checked ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center mb-4">Repeater List Creator</h2>
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="files" class="form-label">Select CSV Files:</label>
+            <input type="file" class="form-control" id="files" name="files[]" multiple required onchange="addFileInputs()">
+        </div>
+        <div id="fileInputs"></div>
+
+        <div class="mb-3">
+            <label for="sort_by" class="form-label">Sort By (select multiple, order will be applied as selected):</label>
+            <select class="form-select" id="sort_by" name="sort_by" multiple required>
+                <option value="Group No">Group No</option>
+                <option value="Frequency">Frequency</option>
+                <option value="Location">Location</option>
+                <option value="Name">Name</option>
+            </select>
+        </div>
+
+        <h4 class="mt-4">Add Hotspot Entry</h4>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="addHotspot" name="addHotspot" onchange="toggleHotspotEntry()">
+            <label class="form-check-label" for="addHotspot">
+                Yes, I want to add a hotspot entry
+            </label>
+        </div>
+
+        <div id="hotspotEntry" style="display: none;">
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Hotspot Entry</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="hotspot_group_no" class="form-label">Group Number:</label>
+                        <input type="text" class="form-control" id="hotspot_group_no" name="hotspot_group_no">
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_group_name" class="form-label">Group Name:</label>
+                        <input type="text" class="form-control" id="hotspot_group_name" name="hotspot_group_name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_name" class="form-label">Name:</label>
+                        <input type="text" class="form-control" id="hotspot_name" name="hotspot_name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_sub_name" class="form-label">Sub Name:</label>
+                        <input type="text" class="form-control" id="hotspot_sub_name" name="hotspot_sub_name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_repeater_call" class="form-label">Repeater Call Sign:</label>
+                        <input type="text" class="form-control" id="hotspot_repeater_call" name="hotspot_repeater_call">
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_designator" class="form-label">Designator:</label>
+                        <select class="form-select" id="hotspot_designator" name="hotspot_designator">
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_gateway_call" class="form-label">Gateway Call Sign (must have 'G' as the 8th character):</label>
+                        <input type="text" class="form-control" id="hotspot_gateway_call" name="hotspot_gateway_call">
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_frequency" class="form-label">Frequency:</label>
+                        <input type="text" class="form-control" id="hotspot_frequency" name="hotspot_frequency">
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_dup" class="form-label">Offset Direction (select + or - even for simplex):</label>
+                        <select class="form-select" id="hotspot_dup" name="hotspot_dup">
+                            <option value="+">+</option>
+                            <option value="-">-</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_offset" class="form-label">Offset:</label>
+                        <select class="form-select" id="hotspot_offset" name="hotspot_offset">
+                            <option value="0.6">0.6</option>
+                            <option value="5.0">5.0</option>
+                            <option value="1.6">1.6</option>
+                            <option value="7.6">7.6</option>
+                            <option value="2.5">2.5</option>
+                            <option value="9.0">9.0</option>
+                            <option value="Simplex Hotspot">Simplex Hotspot</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_position" class="form-label">Position:</label>
+                        <select class="form-select" id="hotspot_position" name="hotspot_position">
+                            <option value="Exact">Exact</option>
+                            <option value="Approximate">Approximate</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_latitude" class="form-label">Latitude:</label>
+                        <input type="text" class="form-control" id="hotspot_latitude" name="hotspot_latitude">
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_longitude" class="form-label">Longitude:</label>
+                        <input type="text" class="form-control" id="hotspot_longitude" name="hotspot_longitude">
+                    </div>
+                    <div class="mb-3">
+                        <label for="hotspot_utc_offset" class="form-label">UTC Offset:</label>
+                        <select class="form-select" id="hotspot_utc_offset" name="hotspot_utc_offset">
+                            <option value="-12:00">-12:00</option>
+                            <option value="-11:00">-11:00</option>
+                            <option value="-10:00">-10:00</option>
+                            <option value="-09:30">-09:30</option>
+                            <option value="-09:00">-09:00</option>
+                            <option value="-08:00">-08:00</option>
+                            <option value="-07:00">-07:00</option>
+                            <option value="-06:00">-06:00</option>
+                            <option value="-05:00">-05:00</option>
+                            <option value="-04:00">-04:00</option>
+                            <option value="-03:30">-03:30</option>
+                            <option value="-03:00">-03:00</option>
+                            <option value="-02:00">-02:00</option>
+                            <option value="-01:00">-01:00</option>
+                            <option value="+00:00">+00:00</option>
+                            <option value="+01:00">+01:00</option>
+                            <option value="+02:00">+02:00</option>
+                            <option value="+03:00">+03:00</option>
+                            <option value="+03:30">+03:30</option>
+                            <option value="+04:00">+04:00</option>
+                            <option value="+04:30">+04:30</option>
+                            <option value="+05:00">+05:00</option>
+                            <option value="+05:30">+05:30</option>
+                            <option value="+05:45">+05:45</option>
+                            <option value="+06:00">+06:00</option>
+                            <option value="+06:30">+06:30</option>
+                            <option value="+07:00">+07:00</option>
+                            <option value="+08:00">+08:00</option>
+                            <option value="+08:45">+08:45</option>
+                            <option value="+09:00">+09:00</option>
+                            <option value="+09:30">+09:30</option>
+                            <option value="+10:00">+10:00</option>
+                            <option value="+10:30">+10:30</option>
+                            <option value="+11:00">+11:00</option>
+                            <option value="+12:00">+12:00</option>
+                            <option value="+12:45">+12:45</option>
+                            <option value="+13:00">+13:00</option>
+                            <option value="+14:00">+14:00</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4">Submit</button>
+    </form>
+</div>
+</body>
+</html>
