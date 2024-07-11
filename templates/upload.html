@@ -122,6 +122,20 @@
 <body>
 <div class="container">
     <h2 class="text-center mb-4">Repeater List Creator</h2>
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">How to Use</h4>
+        <p>Follow these steps to create your repeater list:</p>
+        <ol>
+            <li>Select the CSV files you want to upload. You can upload multiple files at once.</li>
+            <li>For each file, enter the group number, group name, UTC offset, name column choice, and position. If you
+            want to combine CSV files into the same group (e.g. you have multiple files for a single area), you can
+            use the same group number and group name, and the data will be placed together in the output CSV file.</li>
+            <li>Select the columns by which you want to sort the final repeater list.</li>
+            <li>If you want to add a hotspot entry, check the "Yes, I want to add a hotspot entry" checkbox and fill in the required fields.</li>
+            <li>Click the "Submit" button to generate and download the repeater list.</li>
+        </ol>
+        <p>After downloading the repeater list, copy it to your radio's microSD card. Plug the microSD card into your radio, navigate to the SD card settings, and import the repeater list.</p>
+    </div>
     <form method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="files" class="form-label">Select CSV Files:</label>
