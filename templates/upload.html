@@ -1,4 +1,4 @@
-<!doctype html>
+`<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -130,6 +130,8 @@
             <li>For each file, enter the group number, group name, UTC offset, name column choice, and position. If you
             want to combine CSV files into the same group (e.g. you have multiple files for a single area), you can
             use the same group number and group name, and the data will be placed together in the output CSV file.</li>
+            <li>Specify the column names in your CSV that correspond to essential fields like frequency, location, and name.</li>
+            <li>Ensure your provided column names match exactly with the ones in the uploaded file.</li>
             <li>Select the columns by which you want to sort the final repeater list.</li>
             <li>If you want to add a hotspot entry, check the "Yes, I want to add a hotspot entry" checkbox and fill in the required fields.</li>
             <li>Click the "Submit" button to generate and download the repeater list.</li>
@@ -142,6 +144,50 @@
             <input type="file" class="form-control" id="files" name="files[]" multiple required onchange="addFileInputs()">
         </div>
         <div id="fileInputs"></div>
+
+        <h4>Specify Column Names</h4>
+        <div class="mb-3">
+            <label for="col_frequency" class="form-label">Column for Frequency:</label>
+            <input type="text" class="form-control" id="col_frequency" name="col_frequency" placeholder="Enter exact column name from CSV" required>
+        </div>
+        <div class="mb-3">
+            <label for="col_location" class="form-label">Column for Location:</label>
+            <input type="text" class="form-control" id="col_location" name="col_location" placeholder="Enter exact column name from CSV" required>
+        </div>
+        <div class="mb-3">
+            <label for="col_name" class="form-label">Column for Name:</label>
+            <input type="text" class="form-control" id="col_name" name="col_name" placeholder="Enter exact column name from CSV" required>
+        </div>
+        <div class="mb-3">
+            <label for="col_tone" class="form-label">Column for Tone:</label>
+            <input type="text" class="form-control" id="col_tone" name="col_tone" placeholder="Enter exact column name from CSV" required>
+        </div>
+        <div class="mb-3">
+            <label for="col_tone_type" class="form-label">Column for Tone Type:</label>
+            <input type="text" class="form-control" id="col_tone_type" name="col_tone_type" placeholder="Enter exact column name from CSV" required>
+        </div>
+        <div class="mb-3">
+            <label for="col_offset" class="form-label">Column for Offset:</label>
+            <input type="text" class="form-control" id="col_offset" name="col_offset" placeholder="Enter exact column name from CSV" required>
+        </div>
+        <div class="mb-3">
+            <label for="col_input_frequency" class="form-label">Column for Input Frequency:</label>
+            <input type="text" class="form-control" id="col_input_frequency" name="col_input_frequency" placeholder="Enter exact column name from CSV" required>
+        </div>
+        <div class="mb-3">
+            <label for="col_mode" class="form-label">Column for Mode:</label>
+            <input type="text" class="form-control" id="col_mode" name="col_mode" placeholder="Enter exact column name from CSV" required>
+        </div>
+        <div class="mb-3">
+            <label for="col_latitude" class="form-label">Column for Latitude:</label>
+            <input type="text" class="form-control" id="col_latitude" name="col_latitude" placeholder="Enter exact column name from CSV" required>
+        </div>
+        <div class="mb-3">
+            <label for="col_longitude" class="form-label">Column for Longitude:</label>
+            <input type="text" class="form-control" id="col_longitude" name="col_longitude" placeholder="Enter exact column name from CSV" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4">Submit</button>
 
         <div class="mb-3">
             <label for="sort_by" class="form-label">Sort By (select multiple, order will be applied as selected):</label>
@@ -289,3 +335,4 @@
 </div>
 </body>
 </html>
+`
