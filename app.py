@@ -23,20 +23,22 @@ def format_utc_offset(offset):
     return offset
 
 def determine_tone(row):
-    if pd.notnull(row['Tone']) and pd.isnull(row['TSQ']):
-        tone = f"{row['Tone']}"
-        if '.' not in tone:
-            tone += '.0'
-        return 'Tone', f"{tone}Hz"
-    elif pd.notnull(row['Tone']) and pd.notnull(row['TSQ']):
-        tsq = f"{row['TSQ']}"
-        if '.' not in tsq:
-            tsq += '.0'
-        return 'TSQL', f"{tsq}Hz"
-    elif row['Mode'] == 'DSTR':
+    if pd.notnull(row['Uplink Tone']):
+        tone = str(row['Uplink Tone']).strip()
+
+        # If it's a regular tone, ensure it ends with ".0" for consistency
+        if tone.replace('.', '', 1).isdigit():  # Check if it's numeric
+            if '.' not in tone:
+                tone += '.0'
+            return 'Tone', f"{tone}Hz"
+
+        # If it's a digital tone (D023, etc.), return it as TSQL
+        return 'TSQL', tone
+
+    elif row['Mode'] == 'DSTR':  # Default digital mode tone
         return 'OFF', '82.5Hz'
-    else:
-        return '', ''
+
+    return '', ''
 
 def determine_callsign(row, output_freq_col):
     if row['Mode'] == 'analog':
@@ -53,7 +55,13 @@ def determine_callsign(row, output_freq_col):
 
 def process_csv(file_path, group_no, group_name, utc_offset, name_choice, position_choice):
     df = pd.read_csv(file_path)
-    output_freq_col = [col for col in df.columns if re.match(r'^\d+Output Freq$', col)][0]
+    df = clean_columns(df)
+    #output_freq_col = [col for col in df.columns if re.match(r'^\d+Output Freq$', col)][0]
+    output_freq_col = next((col for col in df.columns if "Output Freq" in col), None)
+
+    if output_freq_col is None:
+        raise ValueError("No matching column found for 'Output Freq'")
+
 
     print(f"Processing file: {file_path}")
     print("Initial columns:", df.columns.tolist())
@@ -75,7 +83,7 @@ def process_csv(file_path, group_no, group_name, utc_offset, name_choice, positi
     df['Offset'] = (df[output_freq_col] - df['Input Freq']).abs().round(1)
 
     df[['TONE', 'Repeater Tone']] = df.apply(determine_tone, axis=1, result_type="expand")
-    df[['Repeater Call', 'Gateway Call']] = df.apply(determine_callsign, axis=1, result_type="expand", output_freq_col=output_freq_col)
+    df[['Repeater Call', 'Gateway Call']] = df.apply(lambda row: determine_callsign(row, output_freq_col), axis=1, result_type="expand")
     df['Mode'] = df['Mode'].apply(lambda x: 'FM' if x == 'analog' else 'DV')
 
     final_df = pd.DataFrame({
@@ -93,8 +101,8 @@ def process_csv(file_path, group_no, group_name, utc_offset, name_choice, positi
         'Repeater Tone': df['Repeater Tone'],
         'RPT1USE': 'Yes',
         'Position': position_choice,
-        'Latitude': df['lat'],
-        'Longitude': df['long'],
+        'Latitude': df['Lat'],
+        'Longitude': df['Long'],
         'UTC Offset': format_utc_offset(utc_offset),
         'Location': df['Location']
     })
